@@ -1,3 +1,5 @@
+import os
+
 class Student:
     def __init__(self, name, roll, marks):
         self.name = name
@@ -9,7 +11,20 @@ class Student:
         print(f"Roll No: {self.roll}")
         print(f"Marks: {self.marks}")
 
-students = []
+def save_student(student):
+    with open("students.txt", "a") as file:
+        file.write(f"{student.name},{student.roll},{student.marks}\n")
+
+def load_students():
+    students = []
+    if os.path.exists("students.txt"):
+        with open("students.txt", "r") as file:
+            for line in file:
+                name, roll, marks = line.strip().split(",")
+                students.append(Student(name, roll, marks))
+    return students
+
+students = load_students()
 
 while True:
     print("\n===== Student Management System =====")
@@ -23,7 +38,11 @@ while True:
         name = input("Enter Name: ")
         roll = input("Enter Roll No: ")
         marks = input("Enter Marks: ")
-        students.append(Student(name, roll, marks))
+
+        new_student = Student(name, roll, marks)
+        students.append(new_student)
+        save_student(new_student)
+
         print("Student added successfully!")
 
     elif choice == "2":
